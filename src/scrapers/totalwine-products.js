@@ -2,14 +2,11 @@ const puppeteer = require("puppeteer");
 const XLSX = require("xlsx");
 const { exec } = require("child_process");
 
-const START_URL =
-  "https://www.totalwine.com/wine/c/c0020?&pageSize=72&aty=1,1,0,0";
-
-//pagination-ready URL builder
+// pagination-ready URL builder
 function buildNextUrl(baseUrl, page) {
   const url = new URL(baseUrl);
   url.search = "";
-  url.searchParams.set("pageSize", "72");
+  url.searchParams.set("pageSize", "100");
   url.searchParams.set("aty", "1,1,0,0");
   url.searchParams.set("page", page);
   return url.toString();
@@ -30,7 +27,7 @@ async function waitForProducts(page, timeout = 60000) {
   }
 }
 
-async function scrapeWines() {
+async function scrapeTotalWine(baseUrl, label) {
   const browser = await puppeteer.launch({
     headless: false,
     args: [
@@ -43,12 +40,12 @@ async function scrapeWines() {
 
   const page = await browser.newPage();
 
-  let allWines = [];
+  let allProducts = [];
   let pageCount = 1;
 
   while (true) {
-    const url = buildNextUrl(START_URL, pageCount);
-    console.log(`Scraping page ${pageCount}`);
+    const url = buildNextUrl(baseUrl, pageCount);
+    console.log(`🍷 TotalWine ${label} – Page ${pageCount}`);
 
     await page.goto(url, {
       waitUntil: "domcontentloaded",
@@ -58,7 +55,7 @@ async function scrapeWines() {
     const hasProducts = await waitForProducts(page);
     if (!hasProducts) break;
 
-    const wines = await page.evaluate(() => {
+    const products = await page.evaluate(() => {
       return Array.from(
         document.querySelectorAll(".productCard__bcfe4485")
       ).map(card => ({
@@ -68,7 +65,7 @@ async function scrapeWines() {
         Name:
           card.querySelector("h2 a")
             ?.innerText.trim() || "",
-        "Variant-Detail":
+        Variant:
           card.querySelector("h2 span")
             ?.innerText.trim() || "",
         Price:
@@ -77,32 +74,24 @@ async function scrapeWines() {
       }));
     });
 
-    if (!wines.length) {
-      console.log("No products, stopping.");
-      break;
-    }
+    if (!products.length) break;
 
-    allWines.push(...wines);
-
+    allProducts.push(...products);
     pageCount++;
-    await new Promise(r => setTimeout(r, 1200)); // polite delay
+
+    await new Promise(r => setTimeout(r, 1500));
   }
 
-  // deduplicate by SKU
-  // const unique = Array.from(
-  //   new Map(allWines.map(p => [p.SKU, p])).values()
-  // );
+  console.log(`Total ${label} scraped: ${allProducts.length}`);
 
-  console.log(`Total wines scraped: ${allWines.length}`);
-
-  const fileName = `wines_${Date.now()}.xlsx`;
-  const worksheet = XLSX.utils.json_to_sheet(allWines);
+  const fileName = `totalwine_${label}_${Date.now()}.xlsx`;
+  const worksheet = XLSX.utils.json_to_sheet(allProducts);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Wines");
+  XLSX.utils.book_append_sheet(workbook, worksheet, label.toUpperCase());
   XLSX.writeFile(workbook, fileName);
 
   exec(`start "" "${fileName}"`);
   await browser.close();
 }
 
-scrapeWines();
+module.exports = scrapeTotalWine;
