@@ -1,14 +1,23 @@
 const express = require("express");
 const app = express();
 
-const specsonlineRoutes = require("./routes/specsonline.routes");
-const totalwineRoutes = require("./routes/totalwine.routes");
+/*
+Postman - API Endpoints
+
+Base URL: http://localhost:3000/api/specsonline/wine
+Base URL: http://localhost:3000/api/specsonline/spirits
+Base URL: http://localhost:3000/api/totalwine/wine
+Base URL: http://localhost:3000/api/totalwine/spirits
+
+*/
+
+// register routes from index
+require('./routes')(app);
 
 app.use(express.json());
 
-app.use("/specsonline", specsonlineRoutes);
-app.use("/totalwine", totalwineRoutes);
+// routes are mounted by src/routes/index.js
 
-app.get("/", (req, res) => res.json({ ok: true, routes: ["/specsonline/wine","/specsonline/spirits","/totalwine/wine","/totalwine/spirits"] }));
+app.get("/", (req, res) => res.json({ ok: true, routes: ["/api/specsonline/wine","/api/specsonline/spirits","/api/totalwine/wine","/api/totalwine/spirits"] }));
 
 module.exports = app;
