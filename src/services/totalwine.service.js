@@ -1,6 +1,5 @@
-const scrapeTotalWine = require("./scrapers/totalwine-products");
+const scrapeTotalWine = require("../scrapers/totalwine.scraper");
 
-// totalwine-wine()
 function totalWineWine() {
   const url =
     "https://www.totalwine.com/wine/c/c0020?&pageSize=100&aty=1,1,0,0";
@@ -8,7 +7,6 @@ function totalWineWine() {
   return scrapeTotalWine(url, "wine");
 }
 
-// totalwine-spirits()
 function totalWineSpirits() {
   const url =
     "https://www.totalwine.com/spirits/c/c0030?&pageSize=72&aty=1,1,0,0";

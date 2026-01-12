@@ -2,7 +2,6 @@ const puppeteer = require("puppeteer");
 const XLSX = require("xlsx");
 const { exec } = require("child_process");
 
-// pagination-ready URL builder
 function buildNextUrl(baseUrl, page) {
   const url = new URL(baseUrl);
   url.search = "";
@@ -12,7 +11,6 @@ function buildNextUrl(baseUrl, page) {
   return url.toString();
 }
 
-// robust product wait
 async function waitForProducts(page, timeout = 60000) {
   try {
     await page.waitForFunction(

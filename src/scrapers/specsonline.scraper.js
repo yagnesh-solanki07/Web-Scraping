@@ -59,12 +59,10 @@ async function scrapeSpecsOnline(url, label) {
 
     const nextUrl = buildNextUrl(nextHref);
 
-    // in-page navigation (SAFE)
     await page.evaluate((url) => {
       window.location.href = url;
     }, nextUrl);
 
-    // retry-safe wait
     let loaded = await waitForProducts(page);
 
     if (!loaded) {
@@ -78,7 +76,6 @@ async function scrapeSpecsOnline(url, label) {
         break;
       }
     }
-
 
     if (!(await waitForProducts(page))) break;
 

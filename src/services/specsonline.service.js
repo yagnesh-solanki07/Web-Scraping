@@ -1,7 +1,5 @@
-const scrapeSpecsOnline = require("./scrapers/specsonline-products");
+const scrapeSpecsOnline = require("../scrapers/specsonline.scraper");
 
-// specs-online-wine()
-// url = specs-online-wine url
 function specsOnlineWine() {
   const url =
     "https://specsonline.com/product-category/wine/?show=100";
@@ -9,8 +7,6 @@ function specsOnlineWine() {
   return scrapeSpecsOnline(url, "wine");
 }
 
-// specs-online-spirits()
-// url = specs-online-spirits url
 function specsOnlineSpirits() {
   const url =
     "https://specsonline.com/product-category/spirits/?show=100";
