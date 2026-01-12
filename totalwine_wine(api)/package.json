@@ -1,0 +1,20 @@
+{
+  "name": "more-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "details.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "axios-cookiejar-support": "^6.0.5",
+    "playwright": "^1.57.0",
+    "tough-cookie": "^6.0.0",
+    "xlsx": "^0.18.5"
+  }
+}

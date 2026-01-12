@@ -45,7 +45,7 @@ async function scrapeTotalWine(baseUrl, label) {
 
   while (true) {
     const url = buildNextUrl(baseUrl, pageCount);
-    console.log(`🍷 TotalWine ${label} – Page ${pageCount}`);
+    console.log(`TotalWine ${label} – Page ${pageCount}`);
 
     await page.goto(url, {
       waitUntil: "domcontentloaded",
